@@ -1,0 +1,107 @@
+/home/asirvent/pytorch_env/lib64/python3.6/site-packages/torch/cuda/__init__.py:120: UserWarning: 
+    Found GPU%d %s which is of cuda capability %d.%d.
+    PyTorch no longer supports this GPU because it is too old.
+    The minimum cuda capability supported by this library is %d.%d.
+    
+  warnings.warn(old_gpu_warn.format(d, name, major, minor, min_arch // 10, min_arch % 10))
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+Total trainable parameters: 4801585
+	speed: 0.1099s/iter; left time: 2262.3477s
+	speed: 0.1091s/iter; left time: 2234.9780s
+	speed: 0.1095s/iter; left time: 2232.8871s
+	speed: 0.1098s/iter; left time: 2227.8363s
+	speed: 0.1103s/iter; left time: 2226.3689s
+	speed: 0.1104s/iter; left time: 2218.7974s
+	speed: 0.1106s/iter; left time: 2210.6188s
+	speed: 0.1124s/iter; left time: 2235.3937s
+	speed: 0.1131s/iter; left time: 2238.0947s
+	speed: 0.1133s/iter; left time: 2230.5178s
+	speed: 0.1133s/iter; left time: 2218.9519s
+	speed: 0.1121s/iter; left time: 2185.7243s
+	speed: 0.1151s/iter; left time: 2231.2946s
+	speed: 0.1155s/iter; left time: 2227.7223s
+	speed: 0.1124s/iter; left time: 2157.5797s
+	speed: 0.1117s/iter; left time: 2133.1033s
+	speed: 0.1123s/iter; left time: 2132.1381s
+	speed: 0.1121s/iter; left time: 2117.3311s
+	speed: 0.1148s/iter; left time: 2157.4032s
+	speed: 0.1157s/iter; left time: 2162.3419s
+Epoch: 1 cost time: 232.0626573562622
+Epoch: 1, Steps: 2069 | Train Loss: -47.9749282 Vali Loss: -44.5615503 
+Validation loss decreased (inf --> -44.561550).  Saving model ...
+Updating learning rate to 0.001
+	speed: 0.7319s/iter; left time: 13556.7348s
+	speed: 0.1119s/iter; left time: 2060.7712s
+	speed: 0.1166s/iter; left time: 2136.8724s
+	speed: 0.1122s/iter; left time: 2044.0591s
+	speed: 0.1162s/iter; left time: 2106.5727s
+	speed: 0.1146s/iter; left time: 2065.9351s
+	speed: 0.1123s/iter; left time: 2012.8287s
+	speed: 0.1123s/iter; left time: 2001.5159s
+	speed: 0.1150s/iter; left time: 2038.8388s
+	speed: 0.1164s/iter; left time: 2050.9865s
+	speed: 0.1142s/iter; left time: 2000.5197s
+	speed: 0.1157s/iter; left time: 2015.9146s
+	speed: 0.1136s/iter; left time: 1967.2343s
+	speed: 0.1158s/iter; left time: 1994.7128s
+	speed: 0.1141s/iter; left time: 1954.1270s
+	speed: 0.1152s/iter; left time: 1960.4616s
+	speed: 0.1154s/iter; left time: 1953.4156s
+	speed: 0.1149s/iter; left time: 1932.9232s
+	speed: 0.1145s/iter; left time: 1915.1358s
+	speed: 0.1145s/iter; left time: 1903.4268s
+Epoch: 2 cost time: 236.49435758590698
+Epoch: 2, Steps: 2069 | Train Loss: -44.7149063 Vali Loss: -44.0957160 
+EarlyStopping counter: 1 out of 3
+Updating learning rate to 0.0005
+	speed: 0.7381s/iter; left time: 12144.2471s
+	speed: 0.1128s/iter; left time: 1845.4200s
+	speed: 0.1173s/iter; left time: 1907.2845s
+	speed: 0.1144s/iter; left time: 1847.1286s
+	speed: 0.1168s/iter; left time: 1874.4880s
+	speed: 0.1151s/iter; left time: 1836.2198s
+	speed: 0.1151s/iter; left time: 1825.1085s
+	speed: 0.1142s/iter; left time: 1799.6302s
+	speed: 0.1124s/iter; left time: 1759.7784s
+	speed: 0.1185s/iter; left time: 1843.0415s
+	speed: 0.1162s/iter; left time: 1796.0266s
+	speed: 0.1132s/iter; left time: 1738.1075s
+	speed: 0.1149s/iter; left time: 1753.0280s
+	speed: 0.1184s/iter; left time: 1793.8472s
+	speed: 0.1134s/iter; left time: 1707.4262s
+	speed: 0.1156s/iter; left time: 1727.9652s
+	speed: 0.1157s/iter; left time: 1718.2986s
+	speed: 0.1160s/iter; left time: 1711.8428s
+	speed: 0.1136s/iter; left time: 1663.8549s
+	speed: 0.1132s/iter; left time: 1647.0789s
+Epoch: 3 cost time: 237.92669129371643
+Epoch: 3, Steps: 2069 | Train Loss: -45.0054143 Vali Loss: -44.2188008 
+EarlyStopping counter: 2 out of 3
+Updating learning rate to 0.00025
+	speed: 0.7402s/iter; left time: 10646.7288s
+	speed: 0.1144s/iter; left time: 1634.5463s
+	speed: 0.1159s/iter; left time: 1643.9399s
+	speed: 0.1157s/iter; left time: 1629.7588s
+	speed: 0.1123s/iter; left time: 1569.8943s
+	speed: 0.1148s/iter; left time: 1593.2400s
+	speed: 0.1184s/iter; left time: 1631.9932s
+	speed: 0.1132s/iter; left time: 1549.0000s
+	speed: 0.1165s/iter; left time: 1582.0589s
+	speed: 0.1158s/iter; left time: 1561.0838s
+	speed: 0.1158s/iter; left time: 1549.4550s
+	speed: 0.1140s/iter; left time: 1514.3942s
+	speed: 0.1130s/iter; left time: 1490.3759s
+	speed: 0.1122s/iter; left time: 1467.7665s
+	speed: 0.1196s/iter; left time: 1552.8420s
+	speed: 0.1162s/iter; left time: 1496.6554s
+	speed: 0.1132s/iter; left time: 1447.4820s
+	speed: 0.1129s/iter; left time: 1431.9759s
+	speed: 0.1129s/iter; left time: 1420.5042s
+	speed: 0.1178s/iter; left time: 1470.7183s
+Epoch: 4 cost time: 238.11535549163818
+Epoch: 4, Steps: 2069 | Train Loss: -45.2840530 Vali Loss: -44.4372840 
+EarlyStopping counter: 3 out of 3
+Early stopping
