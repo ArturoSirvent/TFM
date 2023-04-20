@@ -7,4 +7,4 @@
 #SBATCH --output="/home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/logs/execute_1-entrenamiento_PSM.out"
 
 source /home/asirvent/pytorch_env/bin/activate 
-python3 /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/auto/1-entrenamiento_PSM.py
+python3 /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/notebooks_y_scripts/1-entrenamiento_PSM.py
