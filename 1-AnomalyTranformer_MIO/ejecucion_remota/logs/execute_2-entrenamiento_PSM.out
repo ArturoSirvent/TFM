@@ -1,0 +1,100 @@
+------------ Options -------------
+anormly_ratio: 1.0
+batch_size: 128
+data_path: /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/data/PSM
+dataset: PSM
+input_c: 25
+k: 3
+lr: 0.0001
+mode: train
+model_save_path: /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/results_y_models/2-PSM_models
+num_epochs: 3
+output_c: 25
+pretrained_model: None
+win_size: 100
+-------------- End ----------------
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+======================TRAIN MODE======================
+	speed: 0.1958s/iter; left time: 588.4800s
+	speed: 0.1970s/iter; left time: 572.4683s
+	speed: 0.1981s/iter; left time: 555.8503s
+	speed: 0.2011s/iter; left time: 544.1151s
+	speed: 0.2062s/iter; left time: 537.3350s
+	speed: 0.2044s/iter; left time: 512.3190s
+	speed: 0.2048s/iter; left time: 492.6908s
+	speed: 0.2040s/iter; left time: 470.4768s
+	speed: 0.2054s/iter; left time: 453.0532s
+	speed: 0.2049s/iter; left time: 431.4530s
+Epoch: 1 cost time: 209.57780718803406
+Epoch: 1, Steps: 1035 | Train Loss: -46.4683589 Vali Loss: -48.1567958 
+Validation loss decreased (inf --> -48.156796).  Saving model ...
+Updating learning rate to 0.0001
+	speed: 0.7285s/iter; left time: 1435.9589s
+	speed: 0.2046s/iter; left time: 382.8388s
+	speed: 0.2068s/iter; left time: 366.2070s
+	speed: 0.2058s/iter; left time: 343.9729s
+	speed: 0.2064s/iter; left time: 324.2413s
+	speed: 0.2050s/iter; left time: 301.5702s
+	speed: 0.2046s/iter; left time: 280.5668s
+	speed: 0.2056s/iter; left time: 261.2824s
+	speed: 0.2039s/iter; left time: 238.7089s
+	speed: 0.2047s/iter; left time: 219.1928s
+Epoch: 2 cost time: 212.15960025787354
+Epoch: 2, Steps: 1035 | Train Loss: -48.6347071 Vali Loss: -48.8127981 
+EarlyStopping counter: 1 out of 3
+Updating learning rate to 5e-05
+	speed: 0.7196s/iter; left time: 673.5855s
+	speed: 0.2039s/iter; left time: 170.4500s
+	speed: 0.2050s/iter; left time: 150.8945s
+	speed: 0.2044s/iter; left time: 130.0166s
+	speed: 0.2055s/iter; left time: 110.1283s
+	speed: 0.2049s/iter; left time: 89.3403s
+	speed: 0.2051s/iter; left time: 68.9293s
+	speed: 0.2043s/iter; left time: 48.2052s
+	speed: 0.2049s/iter; left time: 27.8624s
+	speed: 0.2046s/iter; left time: 7.3640s
+Epoch: 3 cost time: 211.8590829372406
+Epoch: 3, Steps: 1035 | Train Loss: -48.9128810 Vali Loss: -48.8863181 
+EarlyStopping counter: 2 out of 3
+Updating learning rate to 2.5e-05
+/home/asirvent/pytorch_env/lib64/python3.6/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='none' instead.
+  warnings.warn(warning.format(ret))
+------------ Options -------------
+anormly_ratio: 1.0
+batch_size: 128
+data_path: /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/data/PSM
+dataset: PSM
+input_c: 25
+k: 3
+lr: 0.0001
+mode: test
+model_save_path: /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/results_y_models/2-PSM_models
+num_epochs: 10
+output_c: 25
+pretrained_model: None
+win_size: 100
+-------------- End ----------------
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+======================TEST MODE======================
+Threshold : 0.0033059105975553242
+pred:    (87800,)
+gt:      (87800,)
+pred:  (87800,)
+gt:    (87800,)
+Accuracy : 0.9854, Precision : 0.9724, Recall : 0.9751, F-score : 0.9738 
+Métricas para vectores simplificados:
+Accuracy : 0.9800, Precision : 0.0344, Recall : 0.0381, F-score : 0.0362 

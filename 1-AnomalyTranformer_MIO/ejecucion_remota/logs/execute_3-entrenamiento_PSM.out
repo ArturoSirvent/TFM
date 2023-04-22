@@ -1,0 +1,193 @@
+------------ Options -------------
+anormly_ratio: 1.0
+batch_size: 32
+data_path: /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/data/PSM
+dataset: PSM
+input_c: 25
+k: 3
+lr: 0.0001
+mode: train
+model_save_path: /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/results_y_models/4-PSM_models
+num_epochs: 3
+output_c: 25
+pretrained_model: None
+win_size: 100
+-------------- End ----------------
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+======================TRAIN MODE======================
+	speed: 0.0574s/iter; left time: 706.1721s
+	speed: 0.0566s/iter; left time: 690.8351s
+	speed: 0.0567s/iter; left time: 686.4821s
+	speed: 0.0568s/iter; left time: 682.8043s
+	speed: 0.0570s/iter; left time: 678.4415s
+	speed: 0.0571s/iter; left time: 674.5030s
+	speed: 0.0572s/iter; left time: 669.8170s
+	speed: 0.0573s/iter; left time: 665.5283s
+	speed: 0.0574s/iter; left time: 660.3951s
+	speed: 0.0574s/iter; left time: 655.4682s
+	speed: 0.0575s/iter; left time: 650.3549s
+	speed: 0.0583s/iter; left time: 653.1662s
+	speed: 0.0588s/iter; left time: 653.7551s
+	speed: 0.0594s/iter; left time: 654.4882s
+	speed: 0.0592s/iter; left time: 645.7527s
+	speed: 0.0594s/iter; left time: 642.3576s
+	speed: 0.0595s/iter; left time: 637.5737s
+	speed: 0.0595s/iter; left time: 631.3602s
+	speed: 0.0594s/iter; left time: 623.9296s
+	speed: 0.0597s/iter; left time: 621.8189s
+	speed: 0.0593s/iter; left time: 611.3933s
+	speed: 0.0597s/iter; left time: 610.0290s
+	speed: 0.0602s/iter; left time: 608.3284s
+	speed: 0.0602s/iter; left time: 602.7583s
+	speed: 0.0600s/iter; left time: 595.1171s
+	speed: 0.0598s/iter; left time: 587.0528s
+	speed: 0.0601s/iter; left time: 584.1199s
+	speed: 0.0604s/iter; left time: 580.9956s
+	speed: 0.0603s/iter; left time: 573.8746s
+	speed: 0.0603s/iter; left time: 567.6733s
+	speed: 0.0602s/iter; left time: 560.5021s
+	speed: 0.0603s/iter; left time: 555.7509s
+	speed: 0.0608s/iter; left time: 553.8800s
+	speed: 0.0605s/iter; left time: 545.5123s
+	speed: 0.0605s/iter; left time: 538.8119s
+	speed: 0.0605s/iter; left time: 532.9786s
+	speed: 0.0609s/iter; left time: 530.1823s
+	speed: 0.0608s/iter; left time: 523.3896s
+	speed: 0.0603s/iter; left time: 513.1074s
+	speed: 0.0608s/iter; left time: 511.4276s
+	speed: 0.0608s/iter; left time: 505.1969s
+Epoch: 1 cost time: 245.2238907814026
+Epoch: 1, Steps: 4137 | Train Loss: -47.7795398 Vali Loss: -47.2566543 
+Validation loss decreased (inf --> -47.256654).  Saving model ...
+Updating learning rate to 0.0001
+	speed: 0.5865s/iter; left time: 4794.3020s
+	speed: 0.0623s/iter; left time: 502.9972s
+	speed: 0.0616s/iter; left time: 491.3285s
+	speed: 0.0610s/iter; left time: 480.4046s
+	speed: 0.0610s/iter; left time: 474.0127s
+	speed: 0.0612s/iter; left time: 469.7313s
+	speed: 0.0609s/iter; left time: 461.2538s
+	speed: 0.0613s/iter; left time: 458.2960s
+	speed: 0.0613s/iter; left time: 452.2548s
+	speed: 0.0611s/iter; left time: 444.1783s
+	speed: 0.0603s/iter; left time: 432.5814s
+	speed: 0.0617s/iter; left time: 436.7079s
+	speed: 0.0613s/iter; left time: 427.7851s
+	speed: 0.0612s/iter; left time: 420.5087s
+	speed: 0.0611s/iter; left time: 414.2847s
+	speed: 0.0611s/iter; left time: 407.9941s
+	speed: 0.0611s/iter; left time: 401.9612s
+	speed: 0.0615s/iter; left time: 398.2111s
+	speed: 0.0614s/iter; left time: 391.7008s
+	speed: 0.0610s/iter; left time: 383.0177s
+	speed: 0.0613s/iter; left time: 378.6005s
+	speed: 0.0611s/iter; left time: 371.4327s
+	speed: 0.0612s/iter; left time: 365.7204s
+	speed: 0.0617s/iter; left time: 362.5442s
+	speed: 0.0611s/iter; left time: 353.0571s
+	speed: 0.0611s/iter; left time: 346.5175s
+	speed: 0.0616s/iter; left time: 343.2909s
+	speed: 0.0613s/iter; left time: 335.6844s
+	speed: 0.0615s/iter; left time: 330.6653s
+	speed: 0.0616s/iter; left time: 325.1712s
+	speed: 0.0614s/iter; left time: 317.5920s
+	speed: 0.0613s/iter; left time: 311.0829s
+	speed: 0.0614s/iter; left time: 305.4564s
+	speed: 0.0613s/iter; left time: 298.9386s
+	speed: 0.0614s/iter; left time: 293.2415s
+	speed: 0.0615s/iter; left time: 287.5526s
+	speed: 0.0613s/iter; left time: 280.2875s
+	speed: 0.0613s/iter; left time: 274.1843s
+	speed: 0.0615s/iter; left time: 268.9624s
+	speed: 0.0612s/iter; left time: 261.6043s
+	speed: 0.0612s/iter; left time: 255.4277s
+Epoch: 2 cost time: 253.31325960159302
+Epoch: 2, Steps: 4137 | Train Loss: -48.8575993 Vali Loss: -47.3108590 
+EarlyStopping counter: 1 out of 40
+Updating learning rate to 5e-05
+	speed: 0.5846s/iter; left time: 2360.4901s
+	speed: 0.0614s/iter; left time: 241.8199s
+	speed: 0.0611s/iter; left time: 234.6870s
+	speed: 0.0609s/iter; left time: 227.7949s
+	speed: 0.0617s/iter; left time: 224.4943s
+	speed: 0.0614s/iter; left time: 217.2135s
+	speed: 0.0613s/iter; left time: 210.7824s
+	speed: 0.0612s/iter; left time: 204.4131s
+	speed: 0.0614s/iter; left time: 198.6580s
+	speed: 0.0614s/iter; left time: 192.7813s
+	speed: 0.0612s/iter; left time: 185.9229s
+	speed: 0.0614s/iter; left time: 180.3839s
+	speed: 0.0613s/iter; left time: 174.0534s
+	speed: 0.0611s/iter; left time: 167.4146s
+	speed: 0.0612s/iter; left time: 161.4300s
+	speed: 0.0614s/iter; left time: 155.8940s
+	speed: 0.0612s/iter; left time: 149.1324s
+	speed: 0.0612s/iter; left time: 142.9907s
+	speed: 0.0614s/iter; left time: 137.3698s
+	speed: 0.0617s/iter; left time: 131.9018s
+	speed: 0.0611s/iter; left time: 124.4989s
+	speed: 0.0612s/iter; left time: 118.6288s
+	speed: 0.0614s/iter; left time: 112.9057s
+	speed: 0.0612s/iter; left time: 106.3047s
+	speed: 0.0614s/iter; left time: 100.5635s
+	speed: 0.0614s/iter; left time: 94.3843s
+	speed: 0.0611s/iter; left time: 87.8956s
+	speed: 0.0615s/iter; left time: 82.2335s
+	speed: 0.0613s/iter; left time: 75.8919s
+	speed: 0.0610s/iter; left time: 69.4636s
+	speed: 0.0613s/iter; left time: 63.5850s
+	speed: 0.0612s/iter; left time: 57.4413s
+	speed: 0.0610s/iter; left time: 51.1340s
+	speed: 0.0615s/iter; left time: 45.3745s
+	speed: 0.0617s/iter; left time: 39.3489s
+	speed: 0.0612s/iter; left time: 32.9230s
+	speed: 0.0611s/iter; left time: 26.7492s
+	speed: 0.0617s/iter; left time: 20.8378s
+	speed: 0.0611s/iter; left time: 14.5525s
+	speed: 0.0614s/iter; left time: 8.4797s
+	speed: 0.0616s/iter; left time: 2.3410s
+Epoch: 3 cost time: 253.56922364234924
+Epoch: 3, Steps: 4137 | Train Loss: -48.9553371 Vali Loss: -47.4295232 
+EarlyStopping counter: 2 out of 40
+Updating learning rate to 2.5e-05
+/home/asirvent/pytorch_env/lib64/python3.6/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='none' instead.
+  warnings.warn(warning.format(ret))
+------------ Options -------------
+anormly_ratio: 1.0
+batch_size: 32
+data_path: /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/data/PSM
+dataset: PSM
+input_c: 25
+k: 3
+lr: 0.0001
+mode: test
+model_save_path: /home/asirvent/extra_repos/TFM/1-AnomalyTranformer_MIO/ejecucion_remota/results_y_models/4-PSM_models
+num_epochs: 10
+output_c: 25
+pretrained_model: None
+win_size: 100
+-------------- End ----------------
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+test: (87841, 25)
+train: (132481, 25)
+======================TEST MODE======================
+Threshold : 0.03370253067463635
+pred:    (87800,)
+gt:      (87800,)
+pred:  (87800,)
+gt:    (87800,)
+Accuracy : 0.9685, Precision : 0.9527, Recall : 0.9328, F-score : 0.9427 
+Métricas para vectores simplificados:
+Accuracy : 0.9576, Precision : 0.0318, Recall : 0.0221, F-score : 0.0261 
