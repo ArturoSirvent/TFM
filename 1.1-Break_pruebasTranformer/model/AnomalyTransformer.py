@@ -16,7 +16,8 @@ class EncoderLayer(nn.Module):
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
         self.dropout = nn.Dropout(dropout)
-        self.activation = F.relu if activation == "relu" else F.gelu
+        self.activation = F.relu if activation == "relu" else (F.gelu if activation == "gelu" else F.tanh)
+
 
     def forward(self, x, attn_mask=None):
         new_x, attn, mask, sigma = self.attention(
@@ -56,7 +57,7 @@ class Encoder(nn.Module):
 
 class AnomalyTransformer(nn.Module):
     def __init__(self, win_size, enc_in, c_out, d_model=512, n_heads=8, e_layers=3, d_ff=512,
-                 dropout=0.0, activation='gelu', output_attention=True):
+                 dropout=0.0, activation='tanh', output_attention=True):
         super(AnomalyTransformer, self).__init__()
         self.output_attention = output_attention
 
@@ -79,7 +80,7 @@ class AnomalyTransformer(nn.Module):
             norm_layer=torch.nn.LayerNorm(d_model)
         )
 
-        self.projection = nn.Linear(d_model, c_out, bias=True)
+        self.projection = nn.Linear(d_model, c_out, bias=False)
 
     def forward(self, x):
         enc_out = self.embedding(x)
