@@ -19,12 +19,16 @@ class TriangularCausalMask():
 
 
 class AnomalyAttention(nn.Module):
-    def __init__(self, win_size, mask_flag=False, scale=None, attention_dropout=0.0, output_attention=False):
+    def __init__(self, win_size, mask_flag=False, scale=None, attention_dropout=0.0,sigma_a=5,sigma_b=2,clip_sigma="abs", output_attention=False):
         super(AnomalyAttention, self).__init__()
         self.scale = scale
         self.mask_flag = mask_flag
         self.output_attention = output_attention
         self.dropout = nn.Dropout(attention_dropout)
+        self.sigma_a=sigma_a
+        self.sigma_b=sigma_b
+        self.clip_sigma=clip_sigma
+
         window_size = win_size
         self.distances = torch.zeros((window_size, window_size)).cuda()
         for i in range(window_size):
@@ -45,10 +49,13 @@ class AnomalyAttention(nn.Module):
 
         sigma = sigma.transpose(1, 2)  # B L H ->  B H L
         window_size = attn.shape[-1]
-        #esto se añade porque si, relamente no lo pone el paper  
-        #sigma = torch.sigmoid(sigma * 5) + 1e-5
-        #sigma = torch.pow(2, sigma) - 1
-        sigma=torch.abs(sigma)
+        if self.clip_sigma=="yes":
+            #esto se añade porque si, relamente no lo pone el paper  
+            sigma = torch.sigmoid(sigma * self.sigma_a) + 1e-5
+            sigma = torch.pow(self.sigma_b, sigma) - 1
+        elif self.clip_sigma=="abs":
+            sigma=torch.abs(sigma)
+        
     
         sigma = sigma.unsqueeze(-1).repeat(1, 1, 1, window_size)  # B H L L
         prior = self.distances.unsqueeze(0).unsqueeze(0).repeat(sigma.shape[0], sigma.shape[1], 1, 1).cuda()

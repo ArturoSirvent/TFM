@@ -57,7 +57,7 @@ class Encoder(nn.Module):
 
 class AnomalyTransformer(nn.Module):
     def __init__(self, win_size, enc_in, c_out, d_model=512, n_heads=8, e_layers=3, d_ff=512,
-                 dropout=0.0, activation='tanh', output_attention=True):
+                 dropout=0.0, activation='tanh', output_attention=True,sigma_a=5,sigma_b=2,clip_sigma="abs"):
         super(AnomalyTransformer, self).__init__()
         self.output_attention = output_attention
 
@@ -69,7 +69,7 @@ class AnomalyTransformer(nn.Module):
             [
                 EncoderLayer(
                     AttentionLayer(
-                        AnomalyAttention(win_size, False, attention_dropout=dropout, output_attention=output_attention),
+                        AnomalyAttention(win_size, False, attention_dropout=dropout, output_attention=output_attention,sigma_a=sigma_a,sigma_b=sigma_b,clip_sigma=clip_sigma),
                         d_model, n_heads),
                     d_model,
                     d_ff,
