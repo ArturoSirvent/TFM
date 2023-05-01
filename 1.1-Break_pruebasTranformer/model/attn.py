@@ -46,9 +46,9 @@ class AnomalyAttention(nn.Module):
         sigma = sigma.transpose(1, 2)  # B L H ->  B H L
         window_size = attn.shape[-1]
         #esto se añade porque si, relamente no lo pone el paper  
-        sigma = torch.sigmoid(sigma * 5) + 1e-5
-        sigma = torch.pow(1.6, sigma) - 1
-        #sigma=torch.abs(sigma)
+        #sigma = torch.sigmoid(sigma * 5) + 1e-5
+        #sigma = torch.pow(2, sigma) - 1
+        sigma=torch.abs(sigma)
     
         sigma = sigma.unsqueeze(-1).repeat(1, 1, 1, window_size)  # B H L L
         prior = self.distances.unsqueeze(0).unsqueeze(0).repeat(sigma.shape[0], sigma.shape[1], 1, 1).cuda()
