@@ -80,7 +80,7 @@ class PumpData(object):
 
 
 class AnomalyModel:
-    def __init__(self, AnomalyTransformer, dataset, batch_size=32,window_size=100,enc_in=1,enc_out=1, d_model=64, n_heads=2, e_layers=2, d_ff=32,
+    def __init__(self, AnomalyTransformer, dataset, batch_size=16,window_size=100,enc_in=1,enc_out=1, d_model=64, n_heads=2, e_layers=2, d_ff=32,
                  dropout=0.1, activation='relu',  lambda_=1e-3,max_norm=0.1,norm_type=2,sigma_a=5,sigma_b=3,clip_sigma="abs"):
         self.model = AnomalyTransformer(window_size, enc_in, enc_out, d_model, n_heads, e_layers, d_ff, dropout, activation,
                                         sigma_a=sigma_a,sigma_b=sigma_b,clip_sigma=clip_sigma, output_attention=True,)
@@ -682,14 +682,14 @@ class EvalModel(object):
 # %%
 #el buble de entrenamiento seria algo asi
 #vamos a empezar haciendo una grid search 
-hyperparam_dict={"lambda":[0.001,0.01,0.1,3,10],"sigma_a":[1.2,2,3,4],"sigma_b":[1.1,2,5,10],"stop_epocas":[10,20,50,100,200,500],"clip_sigma":["yes","abs","no"]}
+hyperparam_dict={"lambda":[0.01,0.1,3,5,10],"sigma_a":[1.2,2,3,4],"sigma_b":[1.1,2,5,10],"stop_epocas":[10,20,50,100,200,500],"clip_sigma":["yes","abs","no"]}
 
 pumpdata=PumpData(train_dir)
 
 # Parámetros de entrenamiento
-num_epochs = 210
+num_epochs = 60
 initial_lr = 1e-4
-warmup_epochs = 12
+warmup_epochs = 10
 
 
 def check_hyperparams_in_log(log_file, hyperparams):
@@ -706,7 +706,7 @@ def log_hyperparams(log_file, hyperparams):
     with open(log_file, 'a') as f:
         f.write(str(hyperparams) + '\n')
 
-log_file = "../logs/logs.txt"
+log_file = "../logs/logs_finetune_pumpData_60_epoch_1e-4_lr_10_warm_3_head_128_dmodel_2_block_16_batch.txt"
 
 for lam in hyperparam_dict["lambda"]:
     for clip in hyperparam_dict["clip_sigma"]:
@@ -720,7 +720,7 @@ for lam in hyperparam_dict["lambda"]:
                         continue
                     model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, pumpdata, n_heads=3, d_model=128, enc_in=40, enc_out=40, max_norm=None, sigma_a=sigma_a, sigma_b=sigma_b, clip_sigma=clip)
                     model_instance.train(num_epochs, initial_lr, warmup_epochs, lam, lam)
-                    aux=EvalModel(model_instance,pumpdata,hyperparams,"../results")
+                    aux=EvalModel(model_instance,pumpdata,hyperparams,"../results_finetune_pumpData_60_epoch_1e-4_lr_10_warm_3_head_128_dmodel_2_block_16_batch")
                     aux.generate_log_y_plots()
 
                     log_hyperparams(log_file, hyperparams)  
@@ -734,7 +734,7 @@ for lam in hyperparam_dict["lambda"]:
 
             model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, pumpdata, n_heads=3, d_model=128, enc_in=40, enc_out=40, max_norm=None, sigma_a=sigma_a, sigma_b=sigma_b, clip_sigma=clip)
             model_instance.train(num_epochs, initial_lr, warmup_epochs, lam, lam)
-            aux=EvalModel(model_instance,pumpdata,hyperparams,"../results")
+            aux=EvalModel(model_instance,pumpdata,hyperparams,"../results_finetune_pumpData_60_epoch_1e-4_lr_10_warm_3_head_128_dmodel_2_block_16_batch")
             aux.generate_log_y_plots()
 
             log_hyperparams(log_file, hyperparams) 
