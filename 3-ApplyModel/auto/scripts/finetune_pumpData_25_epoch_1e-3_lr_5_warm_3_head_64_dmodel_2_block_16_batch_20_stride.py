@@ -690,7 +690,7 @@ batch_size=16
 num_epochs = 25
 initial_lr = 1e-3
 warmup_epochs = 5
-name="finetune_pumpData_25_epoch_1e-3_lr_5_warm_2_head_64_dmodel_2_block_16_batch_20_stride"
+name="finetune_pumpData_25_epoch_1e-3_lr_5_warm_3_head_64_dmodel_2_block_16_batch_20_stride"
 log_file = f"../logs/logs_{name}.txt"
 results_file=f"../results_{name}"
 
