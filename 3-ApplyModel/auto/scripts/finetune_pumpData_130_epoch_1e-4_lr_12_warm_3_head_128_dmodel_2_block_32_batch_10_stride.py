@@ -29,15 +29,15 @@ train_dir=os.path.join(data_dir,"clean_data.csv")
 #dataset de los datos 
 
 class PumpData(object):
-    def __init__(self,data_dir,stride=10,winsize=100,norm=True):
+    def __init__(self,data_dir,stride=20,winsize=100,norm=True):
 
 
         self.window_size=winsize
-        self.df=pd.read_csv(data_dir,index_col=0)
+        df=pd.read_csv(data_dir,index_col=0)
         self.stride=stride
         scaler=StandardScaler()
-        
-        self.sensores_data_array=self.df.iloc[:,1:-1].to_numpy()
+        df=df.iloc[::10,:]
+        self.sensores_data_array=df.iloc[:,1:-1].to_numpy()
         #self.length=3000#self.sensores_data_array.shape[0]
 
         if norm:
@@ -52,8 +52,8 @@ class PumpData(object):
         self.array=torch.tensor(np.array(aux))
         #self.sensores_data_tensor=torch.from_numpy(self.sensores_data_array)
         self.list_anomalies=[]
-        aux=self.df.loc[self.df["machine_status"]!=0].iloc[:,-1].index.to_numpy()
-        self.status_column=self.df["machine_status"].iloc[:].to_numpy() #las labels 
+        aux=df.loc[df["machine_status"]!=0].iloc[:,-1].index.to_numpy()
+        self.status_column=df["machine_status"].iloc[:].to_numpy() #las labels 
         group=[aux[0]]
         for i in range(aux.shape[0]-1):
             if aux[i+1]==(aux[i]+1):
@@ -64,8 +64,8 @@ class PumpData(object):
         self.list_anomalies.append(group)
 
 
-        self.timestamp=self.df.iloc[:,1].to_numpy()
-
+        self.timestamp=df.iloc[:,1].to_numpy()
+        del df
 
     def __len__(self):
         return self.array.shape[0]
@@ -80,15 +80,15 @@ class PumpData(object):
 
 
 class AnomalyModel:
-    def __init__(self, AnomalyTransformer, dataset, batch_size=32,window_size=100,enc_in=1,enc_out=1, d_model=64, n_heads=2, e_layers=2, d_ff=32,
+    def __init__(self, AnomalyTransformer, dataset, batch_size=16,window_size=100,enc_in=1,enc_out=1, d_model=64, n_heads=2, e_layers=2, d_ff=32,
                  dropout=0.1, activation='relu',  lambda_=1e-3,max_norm=0.1,norm_type=2,sigma_a=5,sigma_b=3,clip_sigma="abs"):
         self.model = AnomalyTransformer(window_size, enc_in, enc_out, d_model, n_heads, e_layers, d_ff, dropout, activation,
                                         sigma_a=sigma_a,sigma_b=sigma_b,clip_sigma=clip_sigma, output_attention=True,)
         self.model.cuda()
         self.N=e_layers
         self.model = self.xavier_initialization(self.model)
-        self.dataset=dataset
-        self.dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        #self.dataset=dataset
+        #self.dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
         self.lambda_ = lambda_
         self.max_norm=max_norm
         self.batch_size=batch_size
@@ -128,7 +128,6 @@ class AnomalyModel:
         frob_norm = (torch.linalg.norm(x_hat- x,dim=(1,2))**2).mean(axis=0) #((x_hat - x)**2).sum()
         #diss_norm = torch.mean(AnomalyModel.association_discrepancy(P_list, S_list))
         diss_norm = (torch.abs(AnomalyModel.association_discrepancy(P_list, S_list)).sum(dim=1)).mean()
-        print(frob_norm, diss_norm)
         return (frob_norm.item(), diss_norm.item()), frob_norm - (lambda_ * diss_norm)
 
     @staticmethod
@@ -187,7 +186,7 @@ class AnomalyModel:
     def schedule_lambda(self,epoch,num_epochs,init_lambda,final_lambda):
         self.lambda_=(final_lambda-init_lambda)/num_epochs * epoch + init_lambda
         
-    def train(self, num_epochs, initial_lr, warmup_epochs,init_lambda,final_lambda):
+    def train(self,dataloader, num_epochs, initial_lr, warmup_epochs,init_lambda,final_lambda):
         optimizer = optim.Adam(self.model.parameters(), lr=initial_lr)
         self.num_epochs=num_epochs
         self.initial_lr=initial_lr
@@ -197,7 +196,7 @@ class AnomalyModel:
         for epoch in range(num_epochs):
             print(f"Epoch: {epoch}")
             self.schedule_lambda(epoch,num_epochs,init_lambda,final_lambda)
-            for i, (inputs) in enumerate(self.dataloader):
+            for i, (inputs) in enumerate(dataloader):
                 inputs = inputs.float().to("cuda:0")
                 outputs, series, prior, _ = self.model(inputs)
                 #esto ya lo hacemos dentro del calculo de la perdida
@@ -224,30 +223,30 @@ class AnomalyModel:
                 #optimizer.step()
                 #optimizer.zero_grad()
 
-                print(f"Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(self.dataloader)}], Loss: {loss_max.item():.4f}")
+                print(f"Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(dataloader)}], Loss: {loss_max.item():.4f}")
             if warmup_epochs is not None:
                 self.cosine_lr_schedule_with_warmup(optimizer, epoch, initial_lr, num_epochs, warmup_epochs)
 
         print("Entrenamiento finalizado")
         self.loss = np.array(loss_frob_diss)
     
-    def predict(self, data=None):
-        if data is None:
-            data = next(iter(self.dataloader)).float().to("cuda:0")
-        else:
-            data = torch.tensor(data).float()
-            data = data.to("cuda:0") # .unsqueeze(0) -> esto si solo tiene un canal y no lo hemos puesto
+    # def predict(self, data=None):
+    #     if data is None:
+    #         data = next(iter(self.dataloader)).float().to("cuda:0")
+    #     else:
+    #         data = torch.tensor(data).float()
+    #         data = data.to("cuda:0") # .unsqueeze(0) -> esto si solo tiene un canal y no lo hemos puesto
 
-        self.model.eval()
-        with torch.no_grad():
-            out, series, prior, sigmas = self.model(data)
+    #     self.model.eval()
+    #     with torch.no_grad():
+    #         out, series, prior, sigmas = self.model(data)
 
-        out = out.cpu().numpy()
-        series = [s.cpu().numpy() for s in series]
-        prior = [p.cpu().numpy() for p in prior]
-        sigmas = [sigma.cpu().numpy() for sigma in sigmas]
+    #     out = out.cpu().numpy()
+    #     series = [s.cpu().numpy() for s in series]
+    #     prior = [p.cpu().numpy() for p in prior]
+    #     sigmas = [sigma.cpu().numpy() for sigma in sigmas]
 
-        return data.cpu().detach().numpy(),out, series, prior, sigmas
+    #     return data.cpu().detach().numpy(),out, series, prior, sigmas
 
 
     @staticmethod
@@ -321,7 +320,6 @@ class EvalModel(object):
             # Procesa el lote actual
             input_batch = input[batch_start:batch_end]
             out, series, prior, sigmas = self.model_instance.model(input_batch)
-            [print(k.shape) for k in series]
             # Añade el resultado del lote actual a los tensores de resultado
             out_list.append( out)
             series_list.append( torch.stack(series).transpose(0,1))#esto que nos devuelve con listas, asi que los haremos tensores
@@ -385,22 +383,20 @@ class EvalModel(object):
         #tanaño del axes final
         aux=self.out_list.shape[0]
         cols=3 if aux>=3 else aux
-        rows=aux//cols
+        rows=aux//cols if aux//cols<=5 else 5
         if aux%cols!=0:
             rows+=1
         #calculamos las rows, que si la ultima no se termina, la añadimos, en plan... eso
         # y si es mayor que 5, lo dejamos en 5
-        if rows>5:
-            rows=5
-        
 
         plt.figure(figsize=(cols*7,3*rows))
-        for i in range(aux):
-            plt.subplot(rows,cols,i+1)
-            plt.plot(self.out_list[i,:,self.canal_plot].cpu().detach().numpy(),".-",label="out")
-            plt.plot(self.windowed_data2eval[i,:,self.canal_plot].cpu().detach().numpy(),label="inp")
-            plt.plot(self.anomaly_score[i,:].cpu().detach().numpy()[i]/self.anomaly_score.cpu().detach().numpy()[i,:].max(),label="AnomScore")
-            plt.plot(self.sigmas_list[i,:,:,:,0].mean(dim=[0,1]).cpu().detach().numpy()/self.sigmas_list[i,:,:,:,0].mean(dim=[0,1]).cpu().detach().numpy().max(),label="sigma")
+        for i in range(rows*cols):
+            if i<=aux:
+                plt.subplot(rows,cols,i+1)
+                plt.plot(self.out_list[i,:,self.canal_plot].cpu().detach().numpy(),".-",label="out")
+                plt.plot(self.windowed_data2eval[i,:,self.canal_plot].cpu().detach().numpy(),label="inp")
+                plt.plot(self.anomaly_score[i,:].cpu().detach().numpy()[i]/self.anomaly_score.cpu().detach().numpy()[i,:].max(),label="AnomScore")
+                plt.plot(self.sigmas_list[i,:,:,:,0].mean(dim=[0,1]).cpu().detach().numpy()/self.sigmas_list[i,:,:,:,0].mean(dim=[0,1]).cpu().detach().numpy().max(),label="sigma")
         plt.legend()
         plt.tight_layout()
         name_fig="rec_"+"_".join([ str(m) for m in self.hp])+".png"
@@ -676,8 +672,7 @@ class EvalModel(object):
         
         plt.close("all")
 
-
-        
+  
 
 # %%
 #el buble de entrenamiento seria algo asi
@@ -686,6 +681,7 @@ hyperparam_dict={"lambda":[0.01,2,5],"sigma_a":[1.2,3,5],"sigma_b":[1.1,5,10],"s
 
 
 pumpdata=PumpData(train_dir,stride=10)
+
 
 # Parámetros de entrenamiento
 dim_entrada=40
@@ -699,6 +695,8 @@ results_file=f"../results_{name}"
 
 n_heads=3
 d_model=128
+
+dataloader = DataLoader(pumpdata, batch_size=batch_size, shuffle=True)
 
 
 def check_hyperparams_in_log(log_file, hyperparams):
@@ -727,9 +725,13 @@ for lam in hyperparam_dict["lambda"]:
                     if check_hyperparams_in_log(log_file, hyperparams):
                         continue
                     model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, pumpdata, n_heads=n_heads, d_model=d_model, enc_in=dim_entrada,batch_size=batch_size, enc_out=dim_entrada, max_norm=None, sigma_a=sigma_a, sigma_b=sigma_b, clip_sigma=clip)
-                    model_instance.train(num_epochs, initial_lr, warmup_epochs, lam, lam)
+                    model_instance.train(dataloader,num_epochs, initial_lr, warmup_epochs, lam, lam)
                     aux=EvalModel(model_instance,pumpdata,hyperparams,results_file)
+                    del model_instance
                     aux.generate_log_y_plots()
+                    del aux        
+                    torch.cuda.empty_cache()
+                    gc.collect()
 
                     log_hyperparams(log_file, hyperparams)  
         else:
@@ -741,12 +743,15 @@ for lam in hyperparam_dict["lambda"]:
                 continue
 
             model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, pumpdata, n_heads=n_heads, d_model=d_model, enc_in=dim_entrada, enc_out=dim_entrada, max_norm=None, sigma_a=sigma_a, sigma_b=sigma_b, clip_sigma=clip)
-            model_instance.train(num_epochs, initial_lr, warmup_epochs, lam, lam)
+            model_instance.train(dataloader,num_epochs, initial_lr, warmup_epochs, lam, lam)
             aux=EvalModel(model_instance,pumpdata,hyperparams,results_file)
+            del model_instance
             aux.generate_log_y_plots()
-
+            del aux
+            torch.cuda.empty_cache()
+            gc.collect()
             log_hyperparams(log_file, hyperparams) 
-        del model_instance, aux
+
         torch.cuda.empty_cache()
         gc.collect()
 
