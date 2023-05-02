@@ -640,15 +640,14 @@ class EvalModel(object):
 
 #el buble de entrenamiento seria algo asi
 #vamos a empezar haciendo una grid search 
-hyperparam_dict={"lambda":[0.001,0.01,0.1,3,10],"sigma_a":[1.2,2,3,4],"sigma_b":[1,2,5,10],"stop_epocas":[10,20,50,100,200,500],"clip_sigma":["yes","abs","no"]}
+hyperparam_dict={"lambda":[0.001,0.01,0.1,3,10],"sigma_a":[1.2,2,3,4],"sigma_b":[1.1,2,5,10],"stop_epocas":[10,20,50,100,200,500],"clip_sigma":["yes","abs","no"]}
 
-dataset = Data_anomSine(length=10000, sf=0.1, f=0.5, phase=4, anoms=23,anoms_c=4, magnitud=0.6,noise_amp=0)
+dataset = Data_anomSine(length=4000, sf=0.1, f=0.5, phase=4, anoms=23,anoms_c=4, magnitud=0.7,noise_amp=0)
 
-initial_lr = 0.001
 # Parámetros de entrenamiento
-num_epochs = 140
+num_epochs = 20
 initial_lr = 0.001
-warmup_epochs = 12
+warmup_epochs = 2
 
 
 def check_hyperparams_in_log(log_file, hyperparams):
