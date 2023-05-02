@@ -11,3 +11,10 @@ Ahora para probar si funciona, lo voy a probar sobre los datos de pump, y los me
 NOTA: La nomenclatura para los archivos de resultados 1 y 2 es : (lam, sigma_a, sigma_b, clip). Y la diferencia entre ellas es que:  
 - results ha sido entrenado por 10 epocas con 4000 muestras y 1e-3 lr
 - results2 con 3000 muestras, 210 epocas y 1e-3 lr tbn
+
+
+Lo importantel o tenemos en 1.2Hyp.../notebooks para los datos sint  
+Y en 3-ApplyModel/notebooks/2.2Masive... Para la pump data. 
+
+Esta ase de separado porque soy imbecil y lo he empezado a codear separado.   
+
