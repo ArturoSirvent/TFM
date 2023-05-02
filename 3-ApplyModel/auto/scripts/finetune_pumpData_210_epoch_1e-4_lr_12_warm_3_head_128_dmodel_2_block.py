@@ -37,7 +37,7 @@ class PumpData(object):
         self.stride=stride
         scaler=StandardScaler()
         
-        self.sensores_data_array=self.df.iloc[:3000,1:-1].to_numpy()
+        self.sensores_data_array=self.df.iloc[:,1:-1].to_numpy()
         #self.length=3000#self.sensores_data_array.shape[0]
 
         if norm:
@@ -52,8 +52,8 @@ class PumpData(object):
         self.array=torch.tensor(np.array(aux))
         #self.sensores_data_tensor=torch.from_numpy(self.sensores_data_array)
         self.list_anomalies=[]
-        aux=self.df.loc[self.df["machine_status"]!=0].iloc[:3000,-1].index.to_numpy()
-        self.status_column=self.df["machine_status"].iloc[:3000].to_numpy() #las labels 
+        aux=self.df.loc[self.df["machine_status"]!=0].iloc[:,-1].index.to_numpy()
+        self.status_column=self.df["machine_status"].iloc[:].to_numpy() #las labels 
         group=[aux[0]]
         for i in range(aux.shape[0]-1):
             if aux[i+1]==(aux[i]+1):
@@ -64,7 +64,7 @@ class PumpData(object):
         self.list_anomalies.append(group)
 
 
-        self.timestamp=self.df.iloc[:3000,1].to_numpy()
+        self.timestamp=self.df.iloc[:,1].to_numpy()
 
 
     def __len__(self):
@@ -80,7 +80,7 @@ class PumpData(object):
 
 
 class AnomalyModel:
-    def __init__(self, AnomalyTransformer, dataset, batch_size=16,window_size=100,enc_in=1,enc_out=1, d_model=64, n_heads=2, e_layers=2, d_ff=32,
+    def __init__(self, AnomalyTransformer, dataset, batch_size=32,window_size=100,enc_in=1,enc_out=1, d_model=64, n_heads=2, e_layers=2, d_ff=32,
                  dropout=0.1, activation='relu',  lambda_=1e-3,max_norm=0.1,norm_type=2,sigma_a=5,sigma_b=3,clip_sigma="abs"):
         self.model = AnomalyTransformer(window_size, enc_in, enc_out, d_model, n_heads, e_layers, d_ff, dropout, activation,
                                         sigma_a=sigma_a,sigma_b=sigma_b,clip_sigma=clip_sigma, output_attention=True,)
