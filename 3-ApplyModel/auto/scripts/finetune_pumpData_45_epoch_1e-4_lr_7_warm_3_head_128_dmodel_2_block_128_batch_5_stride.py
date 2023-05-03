@@ -36,7 +36,7 @@ class PumpData(object):
         df=pd.read_csv(data_dir,index_col=0)
         self.stride=stride
         scaler=StandardScaler()
-        df=df.iloc[::10,:]
+        df=df.iloc[::15,:]
         self.sensores_data_array=df.iloc[:,1:-1].to_numpy()
         #self.length=3000#self.sensores_data_array.shape[0]
 
@@ -80,7 +80,7 @@ class PumpData(object):
 
 
 class AnomalyModel:
-    def __init__(self, AnomalyTransformer, dataset, batch_size=16,window_size=100,enc_in=1,enc_out=1, d_model=64, n_heads=2, e_layers=2, d_ff=32,
+    def __init__(self, AnomalyTransformer, batch_size=16,window_size=100,enc_in=1,enc_out=1, d_model=64, n_heads=2, e_layers=2, d_ff=32,
                  dropout=0.1, activation='relu',  lambda_=1e-3,max_norm=0.1,norm_type=2,sigma_a=5,sigma_b=3,clip_sigma="abs"):
         self.model = AnomalyTransformer(window_size, enc_in, enc_out, d_model, n_heads, e_layers, d_ff, dropout, activation,
                                         sigma_a=sigma_a,sigma_b=sigma_b,clip_sigma=clip_sigma, output_attention=True,)
@@ -680,16 +680,16 @@ class EvalModel(object):
 hyperparam_dict={"lambda":[0.01,2,5],"sigma_a":[1.2,3,5],"sigma_b":[1.1,5,10],"stop_epocas":[10,20,50,100,200,500],"clip_sigma":["yes","abs","no"]}
 
 
-pumpdata=PumpData(train_dir,stride=5)
+pumpdata=PumpData(train_dir,stride=15)
 
 
 # Parámetros de entrenamiento
 dim_entrada=40
-batch_size=128
+batch_size=32
 num_epochs = 45
 initial_lr = 1e-4
 warmup_epochs = 7
-name="finetune_pumpData_45_epoch_1e-4_lr_7_warm_3_head_128_dmodel_2_block_128_batch_5_stride"
+name="finetune_pumpData_45_epoch_1e-4_lr_7_warm_3_head_128_dmodel_2_block_32_batch_15_stride"
 log_file = f"../logs/logs_{name}.txt"
 results_file=f"../results_{name}"
 
@@ -724,8 +724,10 @@ for lam in hyperparam_dict["lambda"]:
                     
                     if check_hyperparams_in_log(log_file, hyperparams):
                         continue
-                    model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, pumpdata, n_heads=n_heads, d_model=d_model, enc_in=dim_entrada,batch_size=batch_size, enc_out=dim_entrada, max_norm=None, sigma_a=sigma_a, sigma_b=sigma_b, clip_sigma=clip)
+                    model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, n_heads=n_heads, d_model=d_model, enc_in=dim_entrada,batch_size=batch_size, enc_out=dim_entrada, max_norm=None, sigma_a=sigma_a, sigma_b=sigma_b, clip_sigma=clip)
                     model_instance.train(dataloader,num_epochs, initial_lr, warmup_epochs, lam, lam)
+                    torch.cuda.empty_cache()
+                    gc.collect()
                     aux=EvalModel(model_instance,pumpdata,hyperparams,results_file)
                     del model_instance
                     aux.generate_log_y_plots()
@@ -742,8 +744,10 @@ for lam in hyperparam_dict["lambda"]:
             if check_hyperparams_in_log(log_file, hyperparams):
                 continue
 
-            model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, pumpdata, n_heads=n_heads, d_model=d_model, enc_in=dim_entrada, enc_out=dim_entrada, max_norm=None, sigma_a=sigma_a, sigma_b=sigma_b, clip_sigma=clip)
+            model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, n_heads=n_heads, d_model=d_model, enc_in=dim_entrada, enc_out=dim_entrada, max_norm=None, sigma_a=sigma_a, sigma_b=sigma_b, clip_sigma=clip)
             model_instance.train(dataloader,num_epochs, initial_lr, warmup_epochs, lam, lam)
+            torch.cuda.empty_cache()
+            gc.collect()
             aux=EvalModel(model_instance,pumpdata,hyperparams,results_file)
             del model_instance
             aux.generate_log_y_plots()
