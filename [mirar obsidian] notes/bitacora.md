@@ -28,3 +28,6 @@ Tambien he tenido que cambiar "frec" de muestreo, porque habia demasiados datos 
 Todo lo que he hecho hasta ahora, era con la implementacion literal de la funcion de coste que NO hacia la media entre muestras, sino que era la suma (lo que pone en el paper, pero no lo que se ve en la gráficas).   
 Ahora voy a modificar el calculo de la funcion de coste en 1.2Hyper.. para que haga la media y no la suma. Y voy a entrenar sobre los mismo hiperparametros, tanto para datos reales como para los sinteticos. 
 Lo modifico solo para el ASSDISS: 2-loss_mean_MasiveHyperParameterTuning_210_epochs_3000_samples_1e-4_lr
+
+
+He creado 3.1-TrainOnDATA... con nuevo dataset e implementacion de cosas, para UCR justo 
