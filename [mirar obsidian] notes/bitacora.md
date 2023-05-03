@@ -31,3 +31,4 @@ Lo modifico solo para el ASSDISS: 2-loss_mean_MasiveHyperParameterTuning_210_epo
 
 
 He creado 3.1-TrainOnDATA... con nuevo dataset e implementacion de cosas, para UCR justo 
+creo auto 2 dentro de 2-applymodel, para meter todo el auto sobre URC
