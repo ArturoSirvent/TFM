@@ -4,7 +4,8 @@ En 1.1Break.../5-eXP... esta la ultima version de las clases de datos y modelo. 
 Creo la carpeta 1.2-HyperParameter... donde haré modificaciones sobre copias de model y las clases anterior mencionadas.  
 
 
-He creado unas clases para la evaluacion etc, y todo eso esta el original en 1.2Hyper... /1- ,asive...ipynb  
+He creado unas clases para la evaluacion etc, y todo eso esta el original en 1.2Hyper... /1- ,asive...ipynb    
+El modelo que esta ahi es el que añade lo de sigma a y b
 Ahora para probar si funciona, lo voy a probar sobre los datos de pump, y los meto en 3-ApplyModel/2.2masive.pynb  Y lo especializao para nuestro caso de pump con 40 canales lo menos.
 
 
@@ -23,3 +24,7 @@ Esta ase de separado porque soy imbecil y lo he empezado a codear separado.
 he tenido que cambiar los batch sizes -> lo buneos son los de los nombres de la carpeta y del log_ ... 
 
 Tambien he tenido que cambiar "frec" de muestreo, porque habia demasiados datos para el ordenador. He tenido que muestrear cada 10( 45 ecpochs creo) o cada 15 datos para el caso de 230 epochs . Eso deberia estar aun puesto en el .py 
+
+Todo lo que he hecho hasta ahora, era con la implementacion literal de la funcion de coste que NO hacia la media entre muestras, sino que era la suma (lo que pone en el paper, pero no lo que se ve en la gráficas).   
+Ahora voy a modificar el calculo de la funcion de coste en 1.2Hyper.. para que haga la media y no la suma. Y voy a entrenar sobre los mismo hiperparametros, tanto para datos reales como para los sinteticos. 
+Lo modifico solo para el ASSDISS: 2-loss_mean_MasiveHyperParameterTuning_210_epochs_3000_samples_1e-4_lr
