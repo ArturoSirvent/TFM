@@ -18,3 +18,8 @@ Y en 3-ApplyModel/notebooks/2.2Masive... Para la pump data.
 
 Esta ase de separado porque soy imbecil y lo he empezado a codear separado.   
 
+**3 mayo 2023**
+
+he tenido que cambiar los batch sizes -> lo buneos son los de los nombres de la carpeta y del log_ ... 
+
+Tambien he tenido que cambiar "frec" de muestreo, porque habia demasiados datos para el ordenador. He tenido que muestrear cada 10( 45 ecpochs creo) o cada 15 datos para el caso de 230 epochs . Eso deberia estar aun puesto en el .py 
