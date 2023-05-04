@@ -675,10 +675,12 @@ for id in ids:
     plt.figure(figsize=(16, 5))
     aux1=data.sine_wave.cpu().detach().numpy()
     plt.plot((aux1-aux1.min())/(aux1.max()-aux1.min()))
-    plt.axvspan(data.start, data.end, color="red", alpha=0.7)
-    plt.plot((aux.full_anomaly_score-aux.full_anomaly_score.min())/(aux.full_anomaly_score.max()-aux.full_anomaly_score.min()))
+    plt.axvspan(data.start, data.end, color="red", alpha=0.3)
+    plt.plot((aux.full_anomaly_score-aux.full_anomaly_score.min())/(aux.full_anomaly_score.max()-aux.full_anomaly_score.min()),"-.")
     plt.tight_layout()
     plt.savefig(f"../results/ID_{id}_plot.png")
+    plt.xlim(data.start-200,data.end+350)
+    plt.savefig(f"../results/ID_{id}_plot_zoom.png")
     plt.close()
 
     # Guardar información en un fichero
