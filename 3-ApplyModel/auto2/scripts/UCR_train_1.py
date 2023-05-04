@@ -45,14 +45,16 @@ class UCRData(object):
         #pues lo datos no los vamos a cargar aun, lo que vamos a hacer es llamar a una funcion que los carga
 
 
-    def load_ID(self,ID):
+    def load_ID(self,ID,sf=5):
         #cuando llamamos a esto, cambiamos el estado interno del objeto para que tenga el conjunto de datos
         #que queremos 
         self.current_ID=ID
         data_aux=np.loadtxt(self.dir_data_files[ID]["path"])
-        data_aux=data_aux[::5]
+        indices_aux=np.arange(0,data_aux.shape[0])[::sf]
+        #creo quw va a ser mas facil -> data_aux=data_aux[::5] #hay que tener cuidado con este submuestrado porque ahora nos estan cambiando los indices , y los lugares dondes esta localizada la anomalía 
         data_aux=data_aux[...,np.newaxis]
         self.train,self.start,self.end=self.dir_data_files[ID]["index"]
+        self.train,self.start,self.end=self.train//sf,self.start//sf,self.end//sf
         if self.norm:
             scaler=StandardScaler()
             data_aux=scaler.fit_transform(data_aux)
@@ -671,9 +673,10 @@ for id in ids:
 
     # Crear y guardar el gráfico
     plt.figure(figsize=(16, 5))
-    plt.plot(data.sine_wave.cpu().detach().numpy())
+    aux1=data.sine_wave.cpu().detach().numpy()
+    plt.plot((aux1-aux1.min())/(aux1.max()-aux1.min()))
     plt.axvspan(data.start, data.end, color="red", alpha=0.3)
-    plt.plot(aux.full_anomaly_score)
+    plt.plot((aux.full_anomaly_score-aux.full_anomaly_score.min())/(aux.full_anomaly_score.max()-aux.full_anomaly_score.min()))
     plt.tight_layout()
     plt.savefig(f"../results/ID_{id}_plot.png")
     plt.close()
