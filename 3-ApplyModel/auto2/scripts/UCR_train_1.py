@@ -45,16 +45,16 @@ class UCRData(object):
         #pues lo datos no los vamos a cargar aun, lo que vamos a hacer es llamar a una funcion que los carga
 
 
-    def load_ID(self,ID,sf=10,limit_load=80000):
+    def load_ID(self,ID,sf=10,limit_load=50000):
         #cuando llamamos a esto, cambiamos el estado interno del objeto para que tenga el conjunto de datos
         #que queremos 
         self.current_ID=ID
         data_aux=np.loadtxt(self.dir_data_files[ID]["path"])
         self.train,self.start,self.end=self.dir_data_files[ID]["index"]
-        if data_aux.shape[0]>limit_load:
+        #if data_aux.shape[0]>limit_load:
             #indices_aux=np.arange(0,data_aux.shape[0])[::sf]
-            data_aux=data_aux[::3] #hay que tener cuidado con este submuestrado porque ahora nos estan cambiando los indices , y los lugares dondes esta localizada la anomalía 
-            self.train,self.start,self.end=self.train//sf,self.start//sf,self.end//sf 
+        data_aux=data_aux[::15] #hay que tener cuidado con este submuestrado porque ahora nos estan cambiando los indices , y los lugares dondes esta localizada la anomalía 
+        self.train,self.start,self.end=self.train//sf,self.start//sf,self.end//sf 
         data_aux=data_aux[...,np.newaxis]
         #self.train,self.start,self.end=self.dir_data_files[ID]["index"]
         #self.train,self.start,self.end=self.train//sf,self.start//sf,self.end//sf
@@ -255,7 +255,7 @@ class AnomalyModel:
 
 
     @staticmethod
-    def anomaly_score(model, input=None, crit_batch_size=8):
+    def anomaly_score(model, input=None, crit_batch_size=2):
         input = input.float().to("cuda:0")
         model.eval()
         num_batches = int(input.size(0) / crit_batch_size) + (1 if input.size(0) % crit_batch_size != 0 else 0)
@@ -269,7 +269,7 @@ class AnomalyModel:
 
             # Procesa el lote actual
             input_batch = input[batch_start:batch_end]
-            out, series, prior, sigmas = model(input_batch)
+            out, series, prior, _ = model(input_batch)
             ad = F.softmax(
                 -AnomalyModel.association_discrepancy(prior, series), dim=0
             )
@@ -289,7 +289,7 @@ class AnomalyModel:
 #ahora necesitamos algo que nos encapsule la evaluacion de los resultados obtenidos
 #para ello creamos la clase
 class EvalModel(object):
-    def __init__(self,model_instance,dataset_instance,hp=None,save_directory=None,batch_predict=8):
+    def __init__(self,model_instance,dataset_instance,hp=None,save_directory=None,batch_predict=2):
         self.model_instance=model_instance
         self.dataset=dataset_instance
         self.batch_predict=batch_predict
@@ -663,37 +663,39 @@ for id in ids:
 
 
     data.load_ID(id)
-    dataloader = DataLoader(data, batch_size=16, shuffle=True)
+    dataloader = DataLoader(data, batch_size=4, shuffle=True)
 
     model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, n_heads=3, d_model=64, enc_in=1, enc_out=1, max_norm=None, sigma_a=3, sigma_b=5, clip_sigma="yes")
-    model_instance.train(dataloader, 70, 1e-4, 1, 0.01, 0.01)
+    try:
+        model_instance.train(dataloader, 70, 1e-4, 1, 0.01, 0.01)
 
-    del dataloader
-    torch.cuda.empty_cache()
-    gc.collect()
+        del dataloader
+        torch.cuda.empty_cache()
+        gc.collect()
 
-    aux = EvalModel(model_instance, data, None, None)
+        aux = EvalModel(model_instance, data, None, None)
 
-    # Crear y guardar el gráfico
-    plt.figure(figsize=(16, 5))
-    aux1=data.sine_wave.cpu().detach().numpy()
-    plt.plot((aux1-aux1.min())/(aux1.max()-aux1.min()))
-    plt.axvspan(data.start, data.end, color="red", alpha=0.3)
-    plt.plot((aux.full_anomaly_score-aux.full_anomaly_score.min())/(aux.full_anomaly_score.max()-aux.full_anomaly_score.min()),"-.")
-    plt.tight_layout()
-    plt.savefig(f"../results/ID_{id}_plot.png")
-    plt.xlim(data.start-200,data.end+350)
-    plt.savefig(f"../results/ID_{id}_plot_zoom.png")
-    plt.close()
+        # Crear y guardar el gráfico
+        plt.figure(figsize=(16, 5))
+        aux1=data.sine_wave.cpu().detach().numpy()
+        plt.plot((aux1-aux1.min())/(aux1.max()-aux1.min()))
+        plt.axvspan(data.start, data.end, color="red", alpha=0.3)
+        plt.plot((aux.full_anomaly_score-aux.full_anomaly_score.min())/(aux.full_anomaly_score.max()-aux.full_anomaly_score.min()),"-.")
+        plt.tight_layout()
+        plt.savefig(f"../results/ID_{id}_plot.png")
+        plt.xlim(data.start-200,data.end+350)
+        plt.savefig(f"../results/ID_{id}_plot_zoom.png")
+        plt.close()
 
-    # Guardar información en un fichero
-    highest_1_percent = int(len(aux.full_anomaly_score) * 0.01)
-    sorted_indices = sorted(range(len(aux.full_anomaly_score)), key=lambda i: aux.full_anomaly_score[i], reverse=True)[:highest_1_percent]
-    peaks_in_range = sum(data.start <= idx <= data.end for idx in sorted_indices)
+        # Guardar información en un fichero
+        highest_1_percent = int(len(aux.full_anomaly_score) * 0.01)
+        sorted_indices = sorted(range(len(aux.full_anomaly_score)), key=lambda i: aux.full_anomaly_score[i], reverse=True)[:highest_1_percent]
+        peaks_in_range = sum(data.start <= idx <= data.end for idx in sorted_indices)
 
-    with open("../logs/resultados.txt", "a") as f:
-        if peaks_in_range > 0:
-            f.write(f"ID: {id}, 1\n")
-        else:
-            f.write(f"ID: {id}, 0\n")
-
+        with open("../logs/resultados.txt", "a") as f:
+            if peaks_in_range > 0:
+                f.write(f"ID: {id}, 1\n")
+            else:
+                f.write(f"ID: {id}, 0\n")
+    except:
+        print(f"Para {id} error.")
