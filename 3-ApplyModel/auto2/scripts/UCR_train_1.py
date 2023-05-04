@@ -45,7 +45,7 @@ class UCRData(object):
         #pues lo datos no los vamos a cargar aun, lo que vamos a hacer es llamar a una funcion que los carga
 
 
-    def load_ID(self,ID,sf=5):
+    def load_ID(self,ID,sf=10):
         #cuando llamamos a esto, cambiamos el estado interno del objeto para que tenga el conjunto de datos
         #que queremos 
         self.current_ID=ID
@@ -252,7 +252,7 @@ class AnomalyModel:
 
 
     @staticmethod
-    def anomaly_score(model, input=None, crit_batch_size=32):
+    def anomaly_score(model, input=None, crit_batch_size=8):
         input = input.float().to("cuda:0")
         model.eval()
         num_batches = int(input.size(0) / crit_batch_size) + (1 if input.size(0) % crit_batch_size != 0 else 0)
@@ -286,18 +286,18 @@ class AnomalyModel:
 #ahora necesitamos algo que nos encapsule la evaluacion de los resultados obtenidos
 #para ello creamos la clase
 class EvalModel(object):
-    def __init__(self,model_instance,dataset_instance,hp=None,save_directory=None,batch_predict=16):
+    def __init__(self,model_instance,dataset_instance,hp=None,save_directory=None,batch_predict=8):
         self.model_instance=model_instance
         self.dataset=dataset_instance
         self.batch_predict=batch_predict
         self.save_directory=save_directory
-        self.window_anomalies()
+        #self.window_anomalies()
 
         #self.windowed_data2eval=self.windowed_data2eval.unsqueeze(-1) #leañadimos una dimeninsion porque oslo tiene 1 variable 
         #ya lo hace la clase dataset
         self.hp=hp #esto es una lista con los hiperparametros
 
-        self.run_model()
+        #self.run_model()
 
         self.evaluate_model()
 
@@ -353,7 +353,7 @@ class EvalModel(object):
     def evaluate_model(self):
         #aqui generamos todos los plot y todo, y los guardamos en el directorio indicado -> save_directory
 
-        self.anomaly_score=AnomalyModel.anomaly_score(self.model_instance.model, self.windowed_data2eval)
+        #self.anomaly_score=AnomalyModel.anomaly_score(self.model_instance.model, self.windowed_data2eval)
         aux=AnomalyModel.anomaly_score(self.model_instance.model, self.dataset.array)
         empt=torch.empty(aux.shape[0],self.dataset.length)
         empt[:]=float("nan")
