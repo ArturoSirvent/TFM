@@ -45,15 +45,18 @@ class UCRData(object):
         #pues lo datos no los vamos a cargar aun, lo que vamos a hacer es llamar a una funcion que los carga
 
 
-    def load_ID(self,ID,sf=10):
+    def load_ID(self,ID,sf=10,limit_load=80000):
         #cuando llamamos a esto, cambiamos el estado interno del objeto para que tenga el conjunto de datos
         #que queremos 
         self.current_ID=ID
         data_aux=np.loadtxt(self.dir_data_files[ID]["path"])
-        #indices_aux=np.arange(0,data_aux.shape[0])[::sf]
-        #creo quw va a ser mas facil -> data_aux=data_aux[::5] #hay que tener cuidado con este submuestrado porque ahora nos estan cambiando los indices , y los lugares dondes esta localizada la anomalía 
-        data_aux=data_aux[...,np.newaxis]
         self.train,self.start,self.end=self.dir_data_files[ID]["index"]
+        if data_aux.shape[0]>limit_load:
+            #indices_aux=np.arange(0,data_aux.shape[0])[::sf]
+            data_aux=data_aux[::3] #hay que tener cuidado con este submuestrado porque ahora nos estan cambiando los indices , y los lugares dondes esta localizada la anomalía 
+            self.train,self.start,self.end=self.train//sf,self.start//sf,self.end//sf 
+        data_aux=data_aux[...,np.newaxis]
+        #self.train,self.start,self.end=self.dir_data_files[ID]["index"]
         #self.train,self.start,self.end=self.train//sf,self.start//sf,self.end//sf
         if self.norm:
             scaler=StandardScaler()
@@ -660,7 +663,7 @@ for id in ids:
 
 
     data.load_ID(id)
-    dataloader = DataLoader(data, batch_size=8, shuffle=True)
+    dataloader = DataLoader(data, batch_size=16, shuffle=True)
 
     model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, n_heads=3, d_model=64, enc_in=1, enc_out=1, max_norm=None, sigma_a=3, sigma_b=5, clip_sigma="yes")
     model_instance.train(dataloader, 70, 1e-4, 1, 0.01, 0.01)
