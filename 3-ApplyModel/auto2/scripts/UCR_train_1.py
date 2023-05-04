@@ -49,7 +49,9 @@ class UCRData(object):
         #cuando llamamos a esto, cambiamos el estado interno del objeto para que tenga el conjunto de datos
         #que queremos 
         self.current_ID=ID
-        data_aux=np.loadtxt(self.dir_data_files[ID]["path"])[...,np.newaxis]
+        data_aux=np.loadtxt(self.dir_data_files[ID]["path"])
+        data_aux=data_aux[::5]
+        data_aux=data_aux[...,np.newaxis]
         self.train,self.start,self.end=self.dir_data_files[ID]["index"]
         if self.norm:
             scaler=StandardScaler()
@@ -627,18 +629,22 @@ class EvalModel(object):
 
 BASE_DIR="../.."
 data_dir=os.path.join(BASE_DIR,"data2apply/UCR_dataAnomalyArchive")
-data = UCRData(data_dir, stride=15, winsize=100, norm=True)
+data = UCRData(data_dir, stride=20, winsize=100, norm=True)
 
 log_file = "../logs/progreso.log"
 
 
 # Obtener la lista de IDs ya procesados
 processed_ids = set()
-with open(log_file, "r") as log:
-    for line in log:
-        if line.startswith("Procesando ID:"):
-            processed_id = int(line.strip().split(":")[1].strip())
-            processed_ids.add(processed_id)
+try:
+    with open(log_file, "r") as log:
+        for line in log:
+            if line.startswith("Procesando ID:"):
+                processed_id = int(line.strip().split(":")[1].strip())
+                processed_ids.add(processed_id)
+except FileNotFoundError:
+    print("Archivo de registro no encontrado, creando uno nuevo.")
+
 
 ids = sorted(list(data.dir_data_files.keys()))
 for id in ids:
@@ -652,10 +658,10 @@ for id in ids:
 
 
     data.load_ID(id)
-    dataloader = DataLoader(data, batch_size=16, shuffle=True)
+    dataloader = DataLoader(data, batch_size=8, shuffle=True)
 
-    model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, n_heads=3, d_model=128, enc_in=1, enc_out=1, max_norm=None, sigma_a=3, sigma_b=5, clip_sigma="yes")
-    model_instance.train(dataloader, 64, 1e-4, 1, 0.01, 0.01)
+    model_instance = AnomalyModel(AnomalyTransformer.AnomalyTransformer, n_heads=3, d_model=64, enc_in=1, enc_out=1, max_norm=None, sigma_a=3, sigma_b=5, clip_sigma="yes")
+    model_instance.train(dataloader, 70, 1e-4, 1, 0.01, 0.01)
 
     del dataloader
     torch.cuda.empty_cache()
